@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <template id="external_layout_standard_inherit" inherit_id="web.external_layout_standard">
+            <xpath expr="//div[hasclass('header')]" position="inside">
+                <img src="wolftrakglobal/static/src/img/header8.jpg" class="img-center" align="center"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>

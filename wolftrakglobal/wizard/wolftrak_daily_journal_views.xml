@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="wolftrak_daily_journal_form_view" model="ir.ui.view">
+        <field name="name">wolftrak.daily.journal.form.view</field>
+        <field name="model">wolftrak.daily.journal</field>
+        <field name="arch" type="xml">
+            <form string="Libro Diario">
+                <group>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                </group>
+                <group invisible="1">
+                    <field name="move_line_ids"/>
+                    <field name="move_ids"/>
+                </group>
+                <footer>
+                    <button string="Imprimir" type="object" name="render_html" default_focus="1" class="oe_highlight"/>
+                    <button string="Cancelar" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="wolftrak_daily_journal_action" model="ir.actions.act_window">
+        <field name="name">Libro Diario</field>
+        <field name="res_model">wolftrak.daily.journal</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="wolftrak_daily_journal_form_view"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="wolftrak_daily_journal_menu"
+        name="Libro Diario"
+        action="wolftrak_daily_journal_action"
+        parent="account.menu_finance_reports"
+    />
+</odoo>

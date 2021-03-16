@@ -1,0 +1,231 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+            <t t-call="web.external_layout">
+                <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
+                <div class="page">
+                    <table class="table">
+                        <tr class="tablecolor">
+                            <td colspan="2">
+                                <h2 class="textcolor">Cliente</h2>
+                            </td>
+                            <td>
+                                <h2 class="textcolor text-center">
+                                    <!--<span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Invoice</span>-->
+                                    <span t-if="o.type == 'out_invoice' and o.state == 'proforma2'">PRO-FORMA</span>
+                                    <!--<span t-if="o.type == 'out_invoice' and o.state == 'draft'">Invoice</span>-->
+                                    <!--<span t-if="o.type == 'out_invoice' and o.state == 'draft'">Orden de Pago</span>-->
+                                    <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
+                                    <span t-if="o.type == 'out_refund'">Refund</span>
+                                    <span t-if="o.type == 'in_refund'">Vendor Refund</span>
+                                    <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
+                                    <t t-if="o.state != 'draft'"><span t-field="o.number"/></t>
+                                    <t t-if="o.state == 'draft'"><span t-field="o.draft_number"/></t>
+                                </h2>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <strong>Nombre: </strong> <span t-field="o.partner_id.name"/>
+                            </td>
+                            <td>
+                                <strong>Fecha de Emisión: </strong> <span t-field="o.date_invoice"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <strong>RNC/Cédula: </strong> <span t-field="o.partner_id.doc_ident"/>
+                            </td>
+                            <td>
+                                <strong>Fecha de vencimiento: </strong> <span t-field="o.date_due"/>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2">
+                                <strong>Dirección: </strong>
+                                <span t-field="o.partner_id.street"/>,
+                                <span t-field="o.partner_id.street2"/>
+                                <span t-field="o.partner_id.city"/>
+                                <span t-field="o.partner_id.state_id"/>
+                                <span t-field="o.partner_id.zip"/>
+                                <span t-field="o.partner_id.country_id"/>
+                            </td>
+                            <td>
+                                <r t-if="o.state != 'draft'">
+                                    <strong>NCF: </strong>
+                                    <span t-field="o.ncf"/>
+                                </r>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                            </td>
+                            <td>
+                                <strong>Vendedor: </strong> <span t-field="o.user_id.name"/>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div invisible='1'>
+                        <div name="reference" t-if="o.reference" invisible='1'>
+                            <strong>Reference:</strong>
+                            <p t-field="o.reference" invisible='1'/>
+                        </div>
+                    </div>
+
+                    <!-- Is there a discount on at least one line? -->
+                    <t t-set="display_discount" t-value="any([l.discount for l in o.invoice_line_ids])"/>
+
+                    <table class="table table-condensed">
+                        <tr>
+                            <!-- <th class="tablecolor textcolor">Codigo</th> -->
+                            <th class="tablecolor textcolor">Producto</th>
+                            <!--<th class="tablecolor textcolor">Nombre</th>-->
+                            <th class="tablecolor textcolor">Descripción</th>
+                            <th class="text-right tablecolor textcolor">Quantity</th>
+                            <th class="text-right tablecolor textcolor">Unit Price</th>
+                            <th t-if="display_discount" class="text-right tablecolor textcolor" groups="sale.group_discount_per_so_line">Disc.(%)</th>
+                            <!-- <th class="text-right tablecolor textcolor">Taxes</th> -->
+                            <th class="text-right tablecolor textcolor">Price</th>
+                        </tr>
+                        <tr t-foreach="o.invoice_line_ids" t-as="l">
+                            <td><span t-field="l.product_id"/></td>
+                            <!--<td><span t-field="l.name"/></td>-->
+                            <td><span t-field="l.description"/></td>
+                            <td class="text-right">
+                                <span t-esc="int(l.quantity)"/>
+                                <!-- <span t-field="l.uom_id" groups="product.group_uom"/> -->
+                            </td>
+                            <td class="text-right">
+                                <span t-field="l.price_unit"/>
+                            </td>
+                            <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
+                                <span t-field="l.discount"/>
+                            </td>
+                            <!-- <td>
+                                <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.invoice_line_tax_ids))"/>
+                            </td> -->
+                            <td class="text-right">
+                                <span t-field="l.price_subtotal" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}"/>
+                            </td>
+                        </tr>
+                    </table>
+
+                <div class="row">
+                    <div>
+                        <table class="table">
+                            <tr>
+                                <td>
+                                    <p>
+                                        <strong>Nota:</strong>
+                                        <span t-field="o.comment"/>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-xs-4 pull-right">
+                        <table class="table table-condensed">
+                            <tr class="border-black">
+                                <td class="colora"><strong>Subtotal</strong></td>
+                                <td class="text-right">
+                                    <span t-field="o.amount_untaxed" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}"/>
+                                </td>
+                            </tr>
+                            <t t-foreach="o._get_tax_amount_by_group()" t-as="amount_by_group">
+                                <tr>
+                                    <td class="colorb"><span t-esc="amount_by_group[0]"/></td>
+                                    <td class="text-right">
+                                        <span t-esc="amount_by_group[1]"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr>
+                                <td class="colora"><strong>Total</strong></td>
+                                <td class="text-right">
+                                 <span t-field="o.amount_total" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <strong>Tasa de Cambio: </strong>
+                        <strong><span t-field="o.ex_rate"/></strong>
+                    </div>
+                </div>
+                <table class="table">
+                    <tr>
+                        <td class="tablecolor" colspan="2">
+                            <strong class="textcolor text-center tablecolor">Métodos de Pago</strong>
+                        </td>
+                        <td class="tablecolor">
+                            <p class="textcolor text-center">Para mas información de nuestros productos y servicios visita:</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center">
+                            <!--<img class="img img-responsive linea" src="wolftrakglobal/static/src/img/paypal.png"/>-->
+                            <i class="fa fa-paypal fa-2x" aria-hidden="true"/>
+                        </td>
+                        <td align="left">
+                            <h4>administracion@wolftrakglobal.com</h4>
+                            <small class="help-block">Los pagos por este medio poseen un recargo por paypal</small>
+                        </td>
+                        <td align="center">
+                            <i class="fa fa-globe fa-2x" aria-hidden="true"/>
+                            <h4>http://wolftrakglobal.com</h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center">
+                            <img class="img img-responsive linea" src="wolftrakglobal/static/src/img/popular.jpg"/>
+                            <p><b>Banco Popular</b></p>
+                        </td>
+                        <td align="left">
+                            <h4>Cuenta Corriente No.: 797197019 $RD</h4>
+                            <h4>Cuenta Ahorros No.: 801569906 USD</h4>
+                        </td>
+                        <td align="center">
+                            <!--<img src="wolftrakglobal/static/src/img/fb2.png"/>-->
+                            <i class="fa fa-facebook-square fa-2x" aria-hidden="true"/>
+                            <!--<img src="wolftrakglobal/static/src/img/tw2.png"/>-->
+                            <i class="fa fa-twitter-square fa-2x" aria-hidden="true"/>
+                            <!--<img src="wolftrakglobal/static/src/img/ins2.png"/>-->
+                            <i class="fa fa-instagram fa-2x" aria-hidden="true"/>
+                            <h4>WOLFTRAKGLOBAL</h4>
+                        </td>
+                    </tr>
+                </table>
+
+                <table class="table">
+                    <tr align="center">
+                        <td>
+                            <!--<img class="img img-responsive  text-center" src="wolftrakglobal/static/src/img/send2.png"/>-->
+                            <i class="fa fa-paper-plane fa-2x" aria-hidden="true"/>
+                            <h4 class="text-center">info@wolftrakglobal.com</h4>
+                        </td>
+                        <td  align="center">
+                            <!--<img class="img img-responsive text-center" src="wolftrakglobal/static/src/img/logotype.png"/>-->
+                            <i class="fa fa-skype fa-2x" aria-hidden="true"/>
+                            <h4 class="text-center">de.wolftrak</h4>
+                        </td>
+                        <td>
+                            <!--<img class="img img-responsive text-center" src="wolftrakglobal/static/src/img/call2.png"/>-->
+                            <i class="fa fa-phone fa-2x" aria-hidden="true"/>
+                            <h4 class="text-center">+1 829 594 6821</h4>
+                        </td>
+                    </tr>
+                </table>
+
+                <p t-if="o.payment_term_id">
+                    <span t-field="o.payment_term_id.note"/>
+                </p>
+                <p t-if="o.fiscal_position_id.note">
+                    <strong>Fiscal Position Remark:</strong>
+                    <span t-field="o.fiscal_position_id.note"/>
+                </p>
+            </div>
+        </t>
+    </template>
+</data>
+</openerp>

@@ -1,0 +1,97 @@
+<openerp>
+	<data>
+		<record id="form_report_606" model="ir.ui.view">
+			<field name="name">wolftrakglobal.report.form</field>
+			<field name="model">wolftrakglobal.report606</field>
+			<field name="arch" type="xml">
+				<form>
+					<header>
+						<button name="to_wizard" type="object" string="Reporte" class="oe_highlight"/>
+					</header>
+					<sheet>
+						<div class="oe_title">
+							<h1>
+								<field name="name" readonly="1"/>
+							</h1>
+						</div>
+						<group>
+							<group>
+								<field name="period"/>
+								<field name="from_606"/>
+								<field name="to_606"/>
+								<field name="number_reg"/>
+								<field name="binary_string" invisible="1"/>
+								<field name="binary_report" filename="binary_string" attrs="{'invisible': [('binary_report', '=', False)]}"/>
+							</group>
+							<group>
+								<field name="total_inv"/>
+								<field name="total_tax"/>
+								<field name="total_tax_hold"/>
+							</group>
+						</group>
+						<notebook>
+							<page string="Asientos" mode="tree,kanban">
+								<field name="moves">
+									<tree>
+										<field name="ncf_date"/>
+										<field name="ncf"/>
+										<field name="name"/>
+										<field name="partner_id"/>
+										<field name="ref"/>
+										<field name="journal_id"/>
+										<field name="amount"/>
+										<field name="state" invisible="1"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="wizard_report606_view" model="ir.ui.view">
+			<field name="name">wizard view report606</field>
+			<field name="model">wizard.report606</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form>
+					<group>
+						<field name="report_result"/>
+					</group>
+					<group>
+						<field name="report_id" invisible="1"/>
+						<field name="path"/>
+					</group>
+					<footer>
+						<button string="Generar" type="object" name="download_file"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="tree_report_606" model="ir.ui.view">
+			<field name="name">wolftrakglobal.report.tree</field>
+			<field name="model">wolftrakglobal.report606</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name"/>
+					<field name="period"/>
+					<field name="from_606"/>
+					<field name="to_606"/>
+					<field name="number_reg"/>
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="act_report_606">
+			<field name="name">Compras de bienes y servicios</field>
+			<field name="res_model">wolftrakglobal.report606</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="tree_report_606"/>
+		</record>
+
+		<menuitem id="menu_report_606" name="Compras de bienes y servicios" sequence="10" action="act_report_606" parent="account.menu_finance_reports" />
+	</data>
+</openerp>

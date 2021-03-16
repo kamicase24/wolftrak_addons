@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<openerp>
+	<data>
+        <report
+            id="debt_clients_report"
+            model="debt.clients.dashboard"
+            string="Cuentas por pagar"
+            report_type="qweb-pdf"
+            name="wolftrakglobal.debt_clients_template"
+            file="wolftrakglobal.wolftrak_report_debt_clients"
+        />
+
+        <template id="debt_clients_template">
+            <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <h1 class="textcolor3">
+                        <b>Wolftrakglobal</b>
+                        <img src="wolftrakglobal/static/src/img/lobo1.png"/>
+                        <b></b>
+                    </h1>
+                    <table class="table table-bordered">
+                        <tr class="tablecolor textcolor">
+                            <td>Cliente</td>
+                            <td>Número</td>
+                            <td>Monto</td>
+                            <td>Abonado</td>
+                            <td>Restante</td>
+                            <td>Fecha de Emision</td>
+                            <td>Fecha de Vencimiento</td>
+                            <td>Dias Vencidos</td>
+                            <td>Fecha de Pago</td>
+                            <td>NCF</td>
+                            <td>Estado</td>
+                        </tr>
+                        <t t-set="total_line_1" t-value="0.0"/>
+                        <t t-set="total_line_2" t-value="0.0"/>
+                        <t t-set="total_line_3" t-value="0.0"/>
+                        <tr t-foreach="o.debt_clients_report.sorted(key=lambda dc: dc.date_invoice)" t-as="dc">
+                            <td><span t-field="dc.partner_name"/></td>
+
+                            <!-- <t t-if="dc.state == 'payorder'">
+                                <td><span t-field="dc.draft_number"/></td>
+                            </t> -->
+                            <t t-else="">
+                                <td><span t-field="dc.number"/></td>
+                            </t>
+
+                            <td><span t-esc="dc.amount_total" t-options="{'widget': 'monetary','display_currency': dc.currency_id}"/></td>
+                            <td><span t-esc="dc.amount_pay" t-options="{'widget': 'monetary','display_currency': dc.currency_id}"/></td>
+                            <td><span t-esc="dc.residual" t-options="{'widget': 'monetary','display_currency': dc.currency_id}"/></td>
+                            <td><span t-field="dc.date_invoice"/></td>
+                            <td><span t-field="dc.date_due"/></td>
+                            <td><span t-field="dc.due_days"/></td>
+                            <td><span t-field="dc.date_payment"/></td>
+                            <td><span t-field="dc.ncf"/></td>
+
+                            <!-- <td t-if="dc.state == 'payorder'">Orden de Pago</td> -->
+                            <td t-if="dc.state == 'open'">Abierto</td>
+                            <td t-if="dc.state == 'open2'">Abierto Sin credito Fiscal</td>
+
+                            <t t-set="total_line_1" t-value="total_line_1 + dc.amount_total"/>
+                            <t t-set="total_line_2" t-value="total_line_2 + dc.amount_pay"/>
+                            <t t-set="total_line_3" t-value="total_line_3 + dc.residual"/>
+                        </tr>
+                        <tr class="total1 textcolor" t-foreach="o.debt_clients_report.search([], limit=1)" t-as="dc">
+                            <td></td>
+                            <td></td>
+                            <td><span t-esc="total_line_1"  t-options="{'widget': 'monetary','display_currency': dc.currency_id}"/></td>
+                            <td><span t-esc="total_line_2"  t-options="{'widget': 'monetary','display_currency': dc.currency_id}"/></td>
+                            <td><span t-esc="total_line_3"  t-options="{'widget': 'monetary','display_currency': dc.currency_id}"/></td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </template>
+    </data>
+</openerp>

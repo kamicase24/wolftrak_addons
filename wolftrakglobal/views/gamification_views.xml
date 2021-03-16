@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<!-- Formulario, insignea -->
+		<record id="badge_form_view_inherit" model="ir.ui.view">
+			<field name="name">badge.form.view.inherit</field>
+			<field name="model">gamification.badge</field>
+			<field name="inherit_id" ref="gamification.badge_form_view"/>
+			<field name="arch" type="xml">
+				<xpath expr="//form/sheet/group[2]/group" position="inside">
+					<field name="badge_value" widget="progressbar"/>
+				</xpath>
+			</field>
+		</record>
+
+		<!-- Kanban, insignea -->
+		<record id="badge_kanban_view_inherit" model="ir.ui.view">
+			<field name="name">badge.kanban.view.inherit</field>
+			<field name="model">gamification.badge</field>
+			<field name="inherit_id" ref="gamification.badge_kanban_view"/>
+			<field name="arch" type="xml">
+				<xpath expr="//kanban" position="inside">
+					<field name="badge_value"/>
+				</xpath>
+				<xpath expr="//kanban/templates/t/div" position="inside">
+					<div>
+					<strong>
+						Valor de la Insignea
+						<field name="badge_value" widget="progressbar"/>%
+					</strong>
+					</div>
+				</xpath>
+			</field>
+		</record>
+
+		<!-- Kanban, insignea usuario -->
+		<record id="badge_user_kanban_view_inherit" model="ir.ui.view">
+			<field name="name">badge.user.kanban.view.inherit</field>
+			<field name="model">gamification.badge.user</field>
+			<field name="inherit_id" ref="gamification.badge_user_kanban_view"/>
+			<field name="arch" type="xml">
+				<xpath expr="//kanban" position="inside">
+					<field name="success_rate"/>%
+				</xpath>
+				<xpath expr="//kanban/templates/t/div/div" position="inside">
+					<strong>
+						<field name="success_rate" widget="progressbar"/>%
+					</strong>
+				</xpath>
+			</field>
+		</record>
+
+	</data>
+</openerp>

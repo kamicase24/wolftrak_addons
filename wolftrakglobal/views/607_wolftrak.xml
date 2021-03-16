@@ -1,0 +1,90 @@
+<openerp>
+	<data>
+		<record id="form_report_607" model="ir.ui.view">
+			<field name="name">wolftrakglobal.report.form</field>
+			<field name="model">wolftrakglobal.report607</field>
+			<field name="arch" type="xml">
+				<form>
+					<header>
+						<button name="to_wizard" type="object" string="Reporte" class="oe_highlight"/>
+					</header>
+					<sheet>
+						<div class="oe_title">
+							<h1>
+								<field name="name" readonly="1"/>
+							</h1>
+						</div>
+						<group>
+							<group>
+								<field name="period"/>
+								<field name="from_607"/>
+								<field name="to_607"/>
+							</group>
+							<group>
+								<field name="number_reg"/>
+								<field name="total_inv"/>
+								<field name="total_tax"/>
+								<field name="binary_string" invisible="1"/>
+								<field name="binary_report" filename="binary_string" attrs="{'invisible': [('binary_report', '=', False)]}"/>
+							</group>
+						</group>
+						<notebook>
+							<page string="Lineas">
+								<field name="invoices">
+									<tree>
+										<field name="number"/>
+										<field name="ncf"/>
+										<field name="partner_id"/>
+										<field name="ncf_date"/>
+										<field name="date_invoice"/>
+										<field name="amount_total"/>
+										<field name="state" invisible="1"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="wizard_report607_view" model="ir.ui.view">
+			<field name="name">wizard view report607</field>
+			<field name="model">wizard.report607</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form>
+					<field name="report_result"/>
+					<field name="report_id" invisible="1"/>
+					<field name="path"/>
+				</form>
+				<footer>
+					<button string="Generar" type="object" name="download_file"/>
+				</footer>
+			</field>
+		</record>
+
+		<record id="tree_report_607" model="ir.ui.view">
+			<field name="name">wolftrakglobal.report.tree</field>
+			<field name="model">wolftrakglobal.report607</field>
+			<field name="arch" type="xml">
+				<tree string="Ventas de bienes y servicios">
+					<field name="period"/>
+					<field name="from_607"/>
+					<field name="to_607"/>
+					<field name="number_reg"/>
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="act_report_607">
+			<field name="name">Ventas de bienes y servicios</field>
+			<field name="res_model">wolftrakglobal.report607</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<!--<field name="view_id" ref="tree_report_607"/>-->
+		</record>
+
+		<menuitem id="menu_report_607" name="Ventas de bienes y servicios" sequence="10" action="act_report_607" parent="account.menu_finance_reports" />
+	</data>
+</openerp>

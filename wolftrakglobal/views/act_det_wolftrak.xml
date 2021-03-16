@@ -1,0 +1,72 @@
+<openerp>
+	<data>
+		<record id="wolftrak_activity_form_view" model="ir.ui.view">
+			<field name="name">wolftrak.activity.form.view</field>
+			<field name="model">wolftrak.activity</field>
+			<field name="arch" type="xml">
+				<form string="Actividad Detallada">
+					<sheet string="Actividad Detallada">
+						<h2><field name="name"/></h2>
+						<group>
+							<group>
+								<field name="date_from"/>
+								<field name="date_to"/>
+								<field name="order"/>
+							</group>
+							<group>
+								<field name="responsable" widget="many2many_tags"/>
+								<field name="activity" widget="many2many_tags"/>
+								<field name="leads" widget="many2many_tags"/>
+							</group>
+						</group>
+						<group>
+							<field name="total_act"/>
+						</group>
+						<notebook>
+							<page string="Mensajes">
+								<field name="message">
+									<tree>
+										<field name="date"/>
+										<field name="subtype_id"/>
+										<field name="parent_id"/>
+										<field name="create_uid"/>
+										<field name="call_duration" widget="float_time" sum="Tiempo de llamadas"/>
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<record id="tree_activdad_det" model="ir.ui.view">
+			<field name="name">wolftrak.actividad.tree</field>
+			<field name="model">wolftrak.activity</field>
+			<field name="arch" type="xml">
+				<tree>
+					<field name="name"/>
+					<field name="date_from"/>
+					<field name="date_to"/>
+					<field name="create_uid"/>
+					<field name="responsable"/>
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="act_actividad_det">
+			<field name="name">Actividad Detallada</field>
+			<field name="res_model">wolftrak.activity</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem
+			id="menu_actividad_det"
+			name="Actividad Detallada"
+			sequence="1"
+			action="act_actividad_det"
+			parent="crm.crm_menu_report"
+		/>
+	</data>
+</openerp>

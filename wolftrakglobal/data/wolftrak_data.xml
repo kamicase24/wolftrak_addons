@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="report_607_sequence" model="ir.sequence">
+            <field name="implementation">standard</field>
+            <field name="name">607 Sequence</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="padding">3</field>
+            <field name="prefix">607-</field>
+        </record>
+
+        <record id="report_606_sequence" model="ir.sequence">
+            <field name="implementation">standard</field>
+            <field name="name">606 Sequence</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="padding">3</field>
+            <field name="prefix">606-</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <report
+            id="partners_report_report"
+            model="partner.dashboard"
+            string="Reporte Dispositivos"
+            report_type="qweb-pdf"
+            name="wolftrakglobal.partners_report_template"
+            file="wolftrakglobal.report_wolftrak"
+        />
+
+        <template id="partners_report_template">
+            <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <h1 class="textcolor3">
+                        <b>Wolftrak Global</b>
+                        <img src="wolftrakglobal/static/src/img/lobo1.png"/>
+                    </h1>
+                    <t t-set="month" t-value="str(o.month).upper()"/>
+                    <h1><span t-esc="month"/></h1><br/>
+
+                    <table class="table table-bordered">
+                        <tr class="tablecolor textcolor">
+                            <td>#</td>
+                            <td>Cliente</td>
+                            <td>Cantidad</td>
+                            <td>Valor/U</td>
+                            <td>Total</td>
+                            <!--<td>Estado</td>-->
+                        </tr>
+                        <t t-set="total_res" t-value="0.0"/>
+                        <t t-set="total_qty" t-value="0"/>
+                        <t t-set="almonte" t-value="0"/>
+                        <t t-set="almonte_total" t-value="0"/>
+                        <t t-set="price_unit" t-value="0"/>
+                        <t t-set="num" t-value="1"/>
+
+                        <t t-foreach="o.partner_report" t-as="pr">
+                            <t t-if="pr.product_id == 8 and pr.partner_id == 2214">
+                                <t t-set="almonte" t-value="almonte + pr.price_unit"/>
+                                <t t-set="almonte_total" t-value="almonte_total + pr.total"/>
+                            </t>
+                            <t t-if="pr.product_id == 38 and pr.partner_id == 2214">
+                                <t t-set="almonte" t-value="almonte + pr.price_unit"/>
+                                <t t-set="almonte_total" t-value="almonte_total + pr.total"/>
+                            </t>
+                            <t t-if="pr.product_id == 8 and pr.partner_id == 9">
+                                <t t-set="almonte" t-value="almonte + pr.price_unit"/>
+                                <t t-set="almonte_total" t-value="almonte_total + pr.total"/>
+                            </t>
+                            <t t-if="pr.product_id == 38 and pr.partner_id == 9">
+                                <t t-set="almonte" t-value="almonte + pr.price_unit"/>
+                                <t t-set="almonte_total" t-value="almonte_total + pr.total"/>
+                            </t>
+                        </t>
+                    <t t-foreach="o.partner_report" t-as="pr">
+                        <t t-if="pr.inv_state == 'paid'"> <t t-set="condition" t-value="'success'"/> </t>
+                        <t t-else=""> <t t-set="condition" t-value="'danger'"/> </t>
+                        <tr t-att-class="condition">
+                        <t t-if="pr.product_id != 8">
+                            <td><span t-esc="num"/></td>
+                            <td><span t-field="pr.partner_name"/></td>
+                            <td><span t-field="pr.quantity"/></td>
+                            <t t-if="almonte > 0 and pr.partner_id == 2214">
+                                <td><span t-esc="almonte" t-options="{'widget': 'monetary',
+                                                        'display_currency': pr.currency_id}"/></td>
+                                <td><span t-esc="almonte_total" t-options="{'widget': 'monetary',
+                                                        'display_currency': pr.currency_id}"/></td>
+                                <t t-set="total_res" t-value="total_res + almonte_total"/>
+                            </t>
+                            <t t-elif="almonte > 0 and pr.partner_id == 9">
+                                <td><span t-esc="almonte" t-options="{'widget': 'monetary',
+                                                        'display_currency': pr.currency_id}"/></td>
+                                <td><span t-esc="almonte_total" t-options="{'widget': 'monetary',
+                                                            'display_currency': pr.currency_id}"/></td>
+                                <t t-set="total_res" t-value="total_res + almonte_total"/>
+                            </t>
+                            <t t-else="">
+                                <td><span t-field="pr.price_unit" t-options="{'widget': 'monetary',
+                                                        'display_currency': pr.currency_id}"/></td>
+                                <td><span t-field="pr.total" t-options="{'widget': 'monetary',
+                                                            'display_currency': pr.currency_id}"/></td>
+                                <t t-set="total_res" t-value="total_res + pr.total"/>
+                            </t>
+                            <!--<td><span t-field="pr.inv_state"/></td>-->
+                            <t t-set="total_qty" t-value="total_qty + pr.quantity"/>
+                            <t t-set="num" t-value="num+1"/>
+                        </t>
+                        </tr>
+                    </t>
+                        <tr class="total1 textcolor">
+                            <td></td>
+                            <td></td>
+                            <td><span t-esc="total_qty"/></td>
+                            <td></td>
+                            <t t-set="i" t-value="1"/>
+                            <t t-foreach="o.partner_report.search([], limit=1)" t-as="pr">
+                                <!--<t t-if="i == 1">-->
+                                    <td><span t-esc="total_res" t-options="{'widget': 'monetary',
+                                                                'display_currency': pr.currency_id}"/></td>
+                                    <t t-set="i" t-value="0"/>
+                                <!--</t>-->
+                            </t>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </template>
+
+    </data>
+</openerp>

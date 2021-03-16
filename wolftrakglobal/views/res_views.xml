@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	<record id="view_partner_form_inherit" model="ir.ui.view">
+            <field name="name">view.partner.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button type="object"
+                        class="oe_stat_button"
+                        id="device_button"
+                        icon="fa-car"
+                        name="device_history"
+                        context="{'default_partner_id': active_id}"
+                        attrs="{'invisible':[('customer','=',False)]}">
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="total_device" />
+                            </span>
+                            <span class="o_stat_text">Dispositivos</span>
+                        </div>
+                    </button>
+                </div>
+            	<xpath expr="//form/sheet/div[2]" position="inside">
+                    <h3>
+                        <field name="doc_ident" placeholder="Documento de Identificación"/>
+                    </h3>
+                </xpath>
+
+                <xpath expr="//form/sheet/div[2]/h1" position="after">
+                    <field name="alias" placeholder="Razón Comercial"/>
+                </xpath>
+
+                <xpath expr="//form/sheet/group/group" position="inside">
+                    <field name="dgii_state"/>
+                    <field name="pay_reg"/>
+                    <field name="doc_ident_type"/>
+                    <field name="partner_inv" invisible="1"/>
+                    <field name="tag_ids" widget="many2many_tags"/>
+                </xpath>
+
+                <xpath expr="//field[@name='phone']" position="replace">
+                    <field name="phone" placeholder="###-#######"/>
+                </xpath>
+
+                <xpath expr="//field[@name='lang']" position="after">
+                    <field name="start_date"/>
+                    <button name="update_fields"
+                            type="object"
+                            class="oe_highlight"
+                            icon="fa-refresh"/>
+                </xpath>
+            </field>
+    	</record>
+
+        <record id="view_res_partner_filter_inherit" model="ir.ui.view">
+            <field name="name">view.res.partner.filter.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="inside">
+                    <field name="phone"/>
+                    <field name="doc_ident"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_partner_tree" model="ir.ui.view">
+            <field name="name">res.partner.tree.custom</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="inside">
+                    <field name="doc_ident"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="view_company_form_inherit" model="ir.ui.view">
+            <field name="name">view.company.form.inherit</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Técnico">
+                        <group>
+                            <field name="report_path"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
